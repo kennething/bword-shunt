@@ -4,7 +4,7 @@ export type Letter = StringToUnion<typeof letters>;
 
 export type Board = Letter[][];
 
-export type Position = [index: number, jndex: number];
+export type Position = [index: number, jndex: number, elementX: number, elementY: number];
 export type HistoryEntry = {
   positions: Position[];
   word: string;

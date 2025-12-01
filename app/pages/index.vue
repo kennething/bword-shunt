@@ -2,7 +2,7 @@
   <div class="flex h-dvh w-dvw items-center justify-center">
     <div class="relative">
       <Transition>
-        <StartMenu class="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2" v-if="currentStage === 'start'" :can-start="canStart" @start="currentStage = 'game'" />
+        <StartMenu class="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2" v-if="currentStage === 'start'" :can-start="canStart" @start="start" />
         <Game class="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2" v-else-if="currentStage === 'game'" />
       </Transition>
     </div>
@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 const userStore = useUserStore();
-const { board } = storeToRefs(userStore);
+const { board, timer } = storeToRefs(userStore);
 
 const currentStage = ref<"start" | "game" | "results">("start");
 const canStart = ref(false);
@@ -34,6 +34,20 @@ onMounted(async () => {
     console.error(error);
   }
 });
+
+function start() {
+  currentStage.value = "game";
+  timer.value = 80;
+
+  const intervalId = setInterval(() => {
+    if (timer.value <= 0) {
+      currentStage.value = "results";
+      return clearInterval(intervalId);
+    }
+
+    timer.value--;
+  }, 1000);
+}
 </script>
 
 <style scoped>
