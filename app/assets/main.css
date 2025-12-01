@@ -1,0 +1,32 @@
+@import url("https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght@0,300..800;1,300..800&family=Indie+Flower&display=swap");
+
+@import "tailwindcss";
+@plugin "daisyui" {
+  prefix: "du-";
+  logs: false;
+}
+
+@font-face {
+  font-family: "Monocraft";
+  src: url("/Monocraft.otf");
+}
+
+* {
+  font-family:
+    "Monocraft",
+    Comic Sans MS,
+    "Indie Flower",
+    sans-serif;
+}
+
+html {
+  @apply bg-neutral-900 text-white;
+}
+
+button {
+  @apply cursor-pointer;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
