@@ -6,6 +6,11 @@
   logs: false;
 }
 
+@theme {
+  --color-bg-white: #f8f8f8;
+  --color-green: #9ae28d;
+}
+
 @font-face {
   font-family: "Monocraft";
   src: url("/Monocraft.otf");
@@ -20,7 +25,12 @@
 }
 
 html {
-  @apply bg-neutral-900 text-white;
+  background-image: radial-gradient(transparent 60%, rgba(0, 0, 0, 0.3)), url("/bg.svg");
+  @apply bg-repeat text-black;
+}
+
+body {
+  @apply overflow-hidden;
 }
 
 button {
