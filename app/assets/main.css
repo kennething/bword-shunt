@@ -25,12 +25,18 @@
     sans-serif;
 }
 
+.normal-text {
+  font-family: Inter, Arial, sans-serif;
+}
+
 html {
   background-image: radial-gradient(transparent 60%, rgba(0, 0, 0, 0.3)), url("/bg.svg");
+  overscroll-behavior-y: contain;
   @apply bg-repeat text-black;
 }
 
 body {
+  overscroll-behavior-y: contain;
   @apply overflow-hidden;
 }
 

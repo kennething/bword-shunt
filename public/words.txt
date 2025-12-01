@@ -2340,6 +2340,7 @@ from
 frow
 frug
 fubs
+fuck
 fuci
 fuds
 fuel
@@ -4339,6 +4340,7 @@ shad
 shag
 shah
 sham
+shat
 shaw
 shay
 shea
@@ -4350,6 +4352,7 @@ shhh
 shim
 shin
 ship
+shit
 shiv
 shmo
 shod
@@ -8299,6 +8302,7 @@ fruit
 frump
 fryer
 fubsy
+fucks
 fucus
 fuddy
 fudge
@@ -12466,6 +12470,7 @@ share
 shark
 sharn
 sharp
+shart
 shaul
 shave
 shawl
@@ -12509,6 +12514,7 @@ shirk
 shirr
 shirt
 shist
+shits
 shiur
 shiva
 shive

@@ -5,10 +5,10 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
   css: ["~/assets/main.css"],
-  modules: ["@pinia/nuxt"],
+  modules: ["@pinia/nuxt", "@formkit/auto-animate"],
 
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [tailwindcss()]
   },
 
   app: {
@@ -20,9 +20,9 @@ export default defineNuxtConfig({
         { name: "mobile-web-app-capable", content: "yes" },
         { name: "author", content: "Kenneth Ng" },
         { property: "og:title", content: "Bword Shunt" },
-        { property: "og:site_name", content: "Bword Shunt" },
-      ],
+        { property: "og:site_name", content: "Bword Shunt" }
+      ]
       // link: [{ rel: "icon", type: "image/svg+xml", href: "/bspaint.svg" }]
-    },
-  },
+    }
+  }
 });

@@ -4,6 +4,7 @@
       <Transition>
         <StartMenu class="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2" v-if="currentStage === 'start'" :can-start="canStart" @start="start" />
         <Game class="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2" v-else-if="currentStage === 'game'" />
+        <Results class="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2" v-else-if="currentStage === 'results'" @continue="currentStage = 'start'" />
       </Transition>
     </div>
   </div>
@@ -11,7 +12,7 @@
 
 <script setup lang="ts">
 const userStore = useUserStore();
-const { board, timer } = storeToRefs(userStore);
+const { board, timer, history } = storeToRefs(userStore);
 
 const currentStage = ref<"start" | "game" | "results">("start");
 const canStart = ref(false);
@@ -36,8 +37,8 @@ onMounted(async () => {
 });
 
 function start() {
-  currentStage.value = "game";
   timer.value = 80;
+  currentStage.value = "game";
 
   const intervalId = setInterval(() => {
     if (timer.value <= 0) {

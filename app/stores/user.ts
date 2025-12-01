@@ -7,5 +7,10 @@ export const useUserStore = defineStore("userStore", () => {
   const history = ref<HistoryEntry[]>([]);
   const score = computed(() => history.value.reduce((acc, item) => acc + (item.isValid ? calculateScore(item.word.length) : 0), 0));
 
-  return { dictionary, board, timer, history, score };
+  const gameModifiers = reactive({
+    guaranteedPattern: "",
+    weights: ref<Letter[]>(["q", "v", "w", "x", "y", "z"])
+  });
+
+  return { dictionary, board, timer, history, score, gameModifiers };
 });
