@@ -1,4 +1,4 @@
-import type { Letter } from "./types";
+import { letters, type Letter } from "./types";
 
 /**
  * Returns a random integer between `min` and `max`.
@@ -46,14 +46,14 @@ export function calculateScore(wordLength: number) {
   return 2400 + (wordLength - 9) * 200; // 2400, 2600, 2800
 }
 
-function getLetter(weights: Letter[], usedLetters: Record<Letter, number>, previousLetter: Letter | null) {
+function getLetter(weights: Letter[], usedLetters: Record<Letter, number>, previousRowLetter: Letter | null, previousColLetter: Letter | null): Letter {
   const letter = getRandomItem(letters) as Letter;
-  if (usedLetters[letter] && usedLetters[letter] === 2) return getLetter(weights, usedLetters, previousLetter);
-  if (letter === previousLetter) return getLetter(weights, usedLetters, previousLetter);
+  if (usedLetters[letter] && usedLetters[letter] === 2) return getLetter(weights, usedLetters, previousRowLetter, previousColLetter);
+  if (letter === previousRowLetter || letter === previousColLetter) return getLetter(weights, usedLetters, previousRowLetter, previousColLetter);
 
   if (!weights.includes(letter)) return letter;
   else if (Math.random() < 0.5 && Math.random() < 0.5) return letter;
-  else return getLetter(weights, usedLetters, previousLetter);
+  else return getLetter(weights, usedLetters, previousRowLetter, previousColLetter);
 }
 
 /** Generates a 4x4 board of letters with optional weighting for certain letters
@@ -63,13 +63,17 @@ function getLetter(weights: Letter[], usedLetters: Record<Letter, number>, previ
 export function generateBoard(guaranteedPattern: string, weights: Letter[]): Letter[][] {
   const arr: Letter[][] = [];
   const usedLetters = {} as Record<Letter, number>;
-  let previousLetter: Letter | null = null;
+  let previousRowLetter: Letter | null = null;
+  let previousColLetter: Letter | null = null;
 
   for (let i = 0; i < 4; i++) {
     const row: Letter[] = [];
     for (let j = 0; j < 4; j++) {
-      const letter = getLetter(weights, usedLetters, previousLetter);
-      previousLetter = letter;
+      const letter = getLetter(weights, usedLetters, previousRowLetter, previousColLetter);
+
+      previousRowLetter = letter;
+      if (i !== 0) previousColLetter = arr[i - 1]![j]!;
+
       row.push(letter);
       usedLetters[letter] = usedLetters[letter] ? usedLetters[letter] + 1 : 1;
     }

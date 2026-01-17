@@ -1,5 +1,9 @@
 export const useMultiplayerStore = defineStore("multiplayerStore", () => {
   const serverIsOnline = ref(false);
 
-  return { serverIsOnline };
+  const currentName = ref<string>();
+  const currentRoom = ref<Room>();
+  const isHost = ref(false);
+
+  return { serverIsOnline, currentName, currentRoom, isHost };
 });

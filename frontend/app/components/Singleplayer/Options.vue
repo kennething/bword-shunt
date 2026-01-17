@@ -67,15 +67,7 @@
 
       <button @click="isSettingsOpen = true" class="bg-blue rounded-lg px-6 py-2 text-lg font-extrabold shadow-lg shadow-neutral-500">Edit Game Settings</button>
 
-      <button
-        v-if="!history.length"
-        :disabled="!canStart"
-        class="bg-green rounded-lg px-6 py-4 text-lg font-extrabold shadow-lg shadow-neutral-500"
-        :class="{ 'cursor-not-allowed grayscale': !canStart }"
-        @click="start()"
-      >
-        Start
-      </button>
+      <button v-if="!history.length" class="bg-green rounded-lg px-6 py-4 text-lg font-extrabold shadow-lg shadow-neutral-500" @click="start()">Start</button>
       <div v-else class="flex flex-col items-center justify-center gap-4">
         <button class="bg-green rounded-lg px-6 py-2 text-lg font-extrabold shadow-lg shadow-neutral-500" @click="start()">New Game</button>
         <button class="bg-bg-white rounded-lg px-6 py-2 text-lg font-extrabold shadow-lg shadow-neutral-500" @click="start(true)">Retry Last Board</button>
@@ -85,7 +77,6 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{ canStart: boolean }>();
 const emit = defineEmits<{ start: [void] }>();
 
 const userStore = useUserStore();
@@ -110,7 +101,6 @@ function start(sameBoard = false) {
   history.value = [];
   if (!sameBoard) {
     const newBoard = generateBoard(gameModifiers.value.guaranteedPattern, gameModifiers.value.weights);
-    console.log(newBoard);
     board.value = newBoard;
   }
 

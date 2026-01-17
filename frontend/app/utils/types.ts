@@ -12,3 +12,8 @@ export type HistoryEntry = {
 };
 
 export type UUID = string;
+export type Room = {
+  uuid: UUID;
+  hostName: string;
+  players: string[];
+};

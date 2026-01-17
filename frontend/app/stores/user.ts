@@ -9,7 +9,7 @@ export const useUserStore = defineStore("userStore", () => {
 
   const gameModifiers = reactive({
     guaranteedPattern: "",
-    weights: ref<Letter[]>(["q", "v", "w", "x", "y", "z"])
+    weights: ref<Letter[]>(["j", "q", "u", "v", "w", "x", "y", "z"])
   });
 
   return { dictionary, board, timer, history, score, gameModifiers };

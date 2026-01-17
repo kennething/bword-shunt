@@ -8,10 +8,9 @@ export function createRoom(socket: SocketType, playerName: string, callback: Cal
 
   if (players.has(playerName)) return callback(false, "Player name already taken");
   players.set(playerName, roomUuid);
-
   rooms.set(roomUuid, new Room(roomUuid, playerName));
 
   socket.join(roomUuid);
   socket.data.playerName = playerName;
-  callback(true);
+  callback(true, roomUuid);
 }
