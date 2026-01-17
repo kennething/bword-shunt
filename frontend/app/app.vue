@@ -34,6 +34,12 @@ onMounted(async () => {
   }, 1000);
 });
 
+onMounted(async () => {
+  if (window.location.href.includes("https://wordhunt.kennethng.dev") && (await checkServerStatus())) {
+    window.location.href = config.public.redirect;
+  }
+});
+
 async function checkServerStatus() {
   const { error } = await fetchEndpoint("/status");
   return (serverIsOnline.value = !error);
