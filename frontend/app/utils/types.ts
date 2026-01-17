@@ -10,3 +10,5 @@ export type HistoryEntry = {
   word: string;
   isValid: boolean;
 };
+
+export type UUID = string;

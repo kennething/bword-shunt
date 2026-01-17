@@ -3,14 +3,17 @@ import tailwindcss from "@tailwindcss/vite";
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   css: ["~/assets/main.css"],
   modules: ["@pinia/nuxt", "@formkit/auto-animate"],
-
   vite: {
     plugins: [tailwindcss()]
   },
-
+  runtimeConfig: {
+    public: {
+      backendUrl: "http://localhost:6969"
+    }
+  },
   app: {
     head: {
       title: "Bword Shunt",

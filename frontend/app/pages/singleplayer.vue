@@ -2,7 +2,7 @@
   <div class="flex h-dvh w-dvw items-center justify-center">
     <div class="relative">
       <Transition>
-        <StartMenu class="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2" v-if="currentStage === 'start'" :can-start="canStart" @start="start" />
+        <StartSingleplayer class="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2" v-if="currentStage === 'start'" :can-start="canStart" @start="start" />
         <Game class="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2" v-else-if="currentStage === 'game'" />
         <Results class="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2" v-else-if="currentStage === 'results'" @continue="currentStage = 'start'" />
       </Transition>

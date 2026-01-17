@@ -1,3 +1,5 @@
+import type { Letter } from "./types";
+
 /**
  * Returns a random integer between `min` and `max`.
  *
@@ -44,23 +46,33 @@ export function calculateScore(wordLength: number) {
   return 2400 + (wordLength - 9) * 200; // 2400, 2600, 2800
 }
 
-function getLetter(weights: Letter[]) {
+function getLetter(weights: Letter[], usedLetters: Record<Letter, number>, previousLetter: Letter | null) {
   const letter = getRandomItem(letters) as Letter;
+  if (usedLetters[letter] && usedLetters[letter] === 2) return getLetter(weights, usedLetters, previousLetter);
+  if (letter === previousLetter) return getLetter(weights, usedLetters, previousLetter);
+
   if (!weights.includes(letter)) return letter;
-  else if (Math.random() < 0.67) return letter;
-  else return getLetter(weights);
+  else if (Math.random() < 0.5 && Math.random() < 0.5) return letter;
+  else return getLetter(weights, usedLetters, previousLetter);
 }
 
 /** Generates a 4x4 board of letters with optional weighting for certain letters
  * @param guaranteedPattern This string will appear somewhere on the board. Max length is 4
- * @param weights While drawing letters for board creation, letters in this array have a 33% chance to be replaced with a new random letter
+ * @param weights While drawing letters for board creation, letters in this array have a 75% chance to be replaced with a new random letter
  */
-export function generateBoard(guaranteedPattern?: string, weights: Letter[] = ["q", "v", "w", "x", "y", "z"]): Letter[][] {
+export function generateBoard(guaranteedPattern: string, weights: Letter[]): Letter[][] {
   const arr: Letter[][] = [];
+  const usedLetters = {} as Record<Letter, number>;
+  let previousLetter: Letter | null = null;
 
   for (let i = 0; i < 4; i++) {
     const row: Letter[] = [];
-    for (let j = 0; j < 4; j++) row.push(getLetter(weights));
+    for (let j = 0; j < 4; j++) {
+      const letter = getLetter(weights, usedLetters, previousLetter);
+      previousLetter = letter;
+      row.push(letter);
+      usedLetters[letter] = usedLetters[letter] ? usedLetters[letter] + 1 : 1;
+    }
 
     arr.push(row);
   }
