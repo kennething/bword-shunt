@@ -14,17 +14,9 @@ export function startGame(io: ServerType, socket: SocketType): void {
   if (room.hostName !== playerName) return;
   if (room.players.length < 2) return;
 
-  let ready = 0;
-  io.to(roomUuid).emit("startGame", board, (success) => {
-    if (success) ready++;
-  });
+  io.to(roomUuid).emit("startGame", board);
 
   setTimeout(async () => {
-    if (ready !== room.players.length - 1) {
-      io.to(roomUuid).emit("abortGame");
-      return;
-    }
-
     await room.startTimer();
 
     io.to(roomUuid).emit("endGame", Object.fromEntries(room.playerScores.entries()), Object.fromEntries(room.playerHistory.entries()));

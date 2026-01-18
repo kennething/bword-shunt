@@ -52,76 +52,76 @@ definePageMeta({
 const { $socket } = useNuxtApp();
 
 const multiplayerStore = useMultiplayerStore();
-const { currentName, currentRoom, isHost } = storeToRefs(multiplayerStore);
+const { currentStage, currentName, currentRoom, isHost, selfTimerDone, gameCountdown, scoreUpdates, scoreResult, historyResult } = storeToRefs(multiplayerStore);
 
 const userStore = useUserStore();
 const { history, board, timer, score } = storeToRefs(userStore);
-const selfTimerDone = ref(false);
 
 watch(score, (newScore, oldScore) => {
   if (newScore) $socket.emit("updateScore", history.value.at(-1)!.word, newScore - oldScore);
 });
 
-const currentStage = ref<"list" | "game" | "results">("list");
-const gameCountdown = ref(5);
+onMounted(() => {
+  if (!$socket.hasListeners("updateRoom"))
+    $socket.on("updateRoom", (hostName, players) => {
+      if (!currentRoom.value || !currentName.value) return;
+      isHost.value = hostName === currentName.value;
 
-const scoreUpdates = ref<[playerName: string, scoreIncrease: number, newScore: number][]>([]);
+      currentRoom.value.hostName = hostName;
+      currentRoom.value.players = players;
+      if (!players.includes(currentName.value)) navigateTo("/multiplayer");
+    });
 
-$socket.on("updateRoom", (hostName, players) => {
-  if (!currentRoom.value || !currentName.value) return;
-  isHost.value = hostName === currentName.value;
+  if (!$socket.hasListeners("startGame"))
+    $socket.on("startGame", (newBoard) => {
+      board.value = newBoard as Board;
+      selfTimerDone.value = false;
+      history.value = [];
+      timer.value = 80;
+      gameCountdown.value = 5;
+      currentStage.value = "game";
 
-  currentRoom.value.hostName = hostName;
-  currentRoom.value.players = players;
-  if (!players.includes(currentName.value)) navigateTo("/multiplayer");
-});
+      const intervalId = setInterval(() => {
+        gameCountdown.value--;
+        if (gameCountdown.value <= 0) {
+          clearInterval(intervalId);
 
-$socket.on("startGame", (newBoard, callback) => {
-  board.value = newBoard as Board;
-  selfTimerDone.value = false;
-  history.value = [];
-  timer.value = 80;
-  gameCountdown.value = 5;
-  currentStage.value = "game";
-  callback(true);
-
-  const intervalId = setInterval(() => {
-    gameCountdown.value--;
-    if (gameCountdown.value <= 0) {
-      clearInterval(intervalId);
-
-      const timerIntervalId = setInterval(() => {
-        if (timer.value <= 0) {
-          selfTimerDone.value = true;
-          return clearInterval(timerIntervalId);
+          const timerIntervalId = setInterval(() => {
+            if (timer.value <= 0) {
+              selfTimerDone.value = true;
+              return clearInterval(timerIntervalId);
+            }
+            timer.value--;
+          }, 1000);
         }
-        timer.value--;
       }, 1000);
-    }
-  }, 1000);
-});
-$socket.on("abortGame", () => {
-  currentStage.value = "list";
-  timer.value = -1;
+    });
+
+  if (!$socket.hasListeners("playerScored"))
+    $socket.on("playerScored", (playerName, scoreIncrease, newScore) => {
+      if (playerName === currentName.value) return;
+
+      scoreUpdates.value.push([playerName, scoreIncrease, newScore]);
+      setTimeout(() => {
+        scoreUpdates.value.shift();
+      }, 1000);
+    });
+
+  if (!$socket.hasListeners("endGame"))
+    $socket.on("endGame", (scores, histories) => {
+      scoreResult.value = scores;
+      historyResult.value = histories;
+      currentStage.value = "results";
+      gameCountdown.value = -1;
+      timer.value = -1;
+    });
 });
 
-$socket.on("playerScored", (playerName, scoreIncrease, newScore) => {
-  if (playerName === currentName.value) return;
-
-  scoreUpdates.value.push([playerName, scoreIncrease, newScore]);
-  setTimeout(() => {
-    scoreUpdates.value.shift();
-  }, 1000);
-});
-
-const scoreResult = ref<Record<string, number>>();
-const historyResult = ref<Record<string, string[]>>();
-$socket.on("endGame", (scores, histories) => {
-  scoreResult.value = scores;
-  historyResult.value = histories;
-  currentStage.value = "results";
-  timer.value = -1;
-});
+// $socket.on("abortGame", () => {
+//   currentStage.value = "list";
+//   gameCountdown.value = -1;
+//   timer.value = -1;
+// });
 </script>
 
 <style scoped>

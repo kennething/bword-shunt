@@ -35,8 +35,6 @@
 <script setup lang="ts">
 const emit = defineEmits<{ next: [action: 0 | string] }>();
 
-const { $socket } = useNuxtApp();
-
 const rooms = ref<Room[]>([]);
 const loaded = ref(false);
 

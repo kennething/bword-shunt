@@ -9,10 +9,11 @@ export function disconnect(io: ServerType, socket: SocketType): void {
   const room = rooms.get(roomUuid);
   if (!room) return;
 
-  socket.leave(roomUuid);
   room.removePlayer(playerName);
   players.delete(playerName);
 
   if (room.players.length === 0) return void rooms.delete(roomUuid);
+  if (!room.players.includes(room.hostName)) room.hostName = room.players[0];
+
   io.to(roomUuid).emit("updateRoom", room.hostName, room.players);
 }

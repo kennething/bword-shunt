@@ -5,8 +5,7 @@ export type CallbackFn<T = string> = (success: boolean, data?: T) => void;
 
 export interface ServerToClientEvents {
   updateRoom: (hostName: string, players: string[]) => void;
-  /** emit to everyone of room; if everyone doesnt callback then abort */
-  startGame: (board: string[][], callback: CallbackFn) => void;
+  startGame: (board: string[][]) => void;
   abortGame: () => void;
   playerScored: (playerName: string, scoreIncrease: number, newScore: number) => void;
   endGame: (scores: Record<string, number>, histories: Record<string, string[]>) => void;
