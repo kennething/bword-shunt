@@ -25,8 +25,8 @@ export default defineNuxtConfig({
         { name: "author", content: "Kenneth Ng" },
         { property: "og:title", content: "Bword Shunt" },
         { property: "og:site_name", content: "Bword Shunt" }
-      ]
-      // link: [{ rel: "icon", type: "image/svg+xml", href: "/bspaint.svg" }]
+      ],
+      link: [{ rel: "icon", type: "image/svg+xml", href: "/bword-shunt.svg" }]
     }
   }
 });
