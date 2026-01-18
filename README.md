@@ -1,4 +1,4 @@
-<p align="center"><img src="./public/bword-shunt.svg" height="75" /></p>
+<p align="center"><img src="./frontend/public/bword-shunt.svg" height="75" /></p>
 <h1 align="center">bWord sHunt</h1>
 
 Word Hunt but bad.
