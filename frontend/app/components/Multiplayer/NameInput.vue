@@ -10,7 +10,7 @@
 
       <div class="flex flex-col items-center justify-center gap-2">
         <div class="rounded-lg border px-4 py-2">
-          <input type="text" v-model="name" class="focus:outline-none" placeholder="enter a username" maxlength="50" minlength="1" />
+          <input type="text" v-model="name" class="w-full focus:outline-none" placeholder="enter a username" maxlength="50" minlength="1" />
         </div>
         <p class="-my-2 text-center text-wrap text-red-500" :class="{ 'opacity-0': !error }">{{ error || "." }}</p>
       </div>
