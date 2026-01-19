@@ -1,9 +1,13 @@
-import { generateBoard } from "../../../frontend/app/utils/functions";
+import { generateBoard, getRandomItem } from "../../../frontend/app/utils/functions";
 import { ServerType, SocketType } from "../utils/types";
 import { players, rooms } from "../utils/data";
 
+const wordEndings = ["", "s", "e", "es", "ed", "ng", "ngs", "ing", "ings", "es", "er", "ers", "ate", "ates", "or", "ors", "on", "ons"];
+
 export function startGame(io: ServerType, socket: SocketType): void {
-  const board = generateBoard("", ["j", "q", "u", "v", "w", "x", "y", "z"]);
+  const selectedPattern = getRandomItem(wordEndings);
+  console.log(selectedPattern);
+  const board = generateBoard(selectedPattern, ["j", "q", "u", "v", "w", "x", "y", "z"]);
 
   const playerName = socket.data.playerName;
   const roomUuid = players.get(playerName);

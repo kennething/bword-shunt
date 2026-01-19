@@ -46,62 +46,89 @@ export function calculateScore(wordLength: number) {
   return 2400 + (wordLength - 9) * 200; // 2400, 2600, 2800
 }
 
-function getLetter(weights: Letter[], usedLetters: Record<Letter, number>, previousRowLetter: Letter | null, previousColLetter: Letter | null): Letter {
+function getLetter(weights: Letter[]): Letter {
   const letter = getRandomItem(letters) as Letter;
-  if (usedLetters[letter] && usedLetters[letter] === 2) return getLetter(weights, usedLetters, previousRowLetter, previousColLetter);
-  if (letter === previousRowLetter || letter === previousColLetter) return getLetter(weights, usedLetters, previousRowLetter, previousColLetter);
 
   if (!weights.includes(letter)) return letter;
-  else if (Math.random() < 0.5 && Math.random() < 0.5) return letter;
-  else return getLetter(weights, usedLetters, previousRowLetter, previousColLetter);
+  else if (Math.random() < 0.5 && Math.random() < 0.5 && Math.random() < 0.5) return letter;
+  else return getLetter(weights);
 }
 
 /** Generates a 4x4 board of letters with optional weighting for certain letters
  * @param guaranteedPattern This string will appear somewhere on the board. Max length is 4
- * @param weights While drawing letters for board creation, letters in this array have a 75% chance to be replaced with a new random letter
+ * @param weights While drawing letters for board creation, letters in this array have an 87% chance to be replaced with a new random letter
  */
 export function generateBoard(guaranteedPattern: string, weights: Letter[]): Letter[][] {
-  const arr: Letter[][] = [];
+  const board: Letter[][] = Array.from({ length: 4 }, () => Array.from({ length: 4 }, () => "" as Letter));
   const usedLetters = {} as Record<Letter, number>;
-  let previousRowLetter: Letter | null = null;
-  let previousColLetter: Letter | null = null;
 
-  for (let i = 0; i < 4; i++) {
-    const row: Letter[] = [];
-    for (let j = 0; j < 4; j++) {
-      const letter = getLetter(weights, usedLetters, previousRowLetter, previousColLetter);
+  /** @returns `false` if the letter has already been used twice, `true` otherwise */
+  function pushUsedLetter(letter: Letter) {
+    if (!usedLetters[letter]) usedLetters[letter] = 0;
+    if (usedLetters[letter] === 2) return false; // already 2
+    usedLetters[letter]++;
+    if (usedLetters[letter] === 2) return Math.random() < 0.5; // now 2
+    return true;
+  }
 
-      previousRowLetter = letter;
-      if (i !== 0) previousColLetter = arr[i - 1]![j]!;
+  (function spawnGuaranteedPattern() {
+    let i = getRandomInt(0, 3);
+    let j = getRandomInt(0, 3);
+    const previousPositions: [number, number][] = [[i, j]];
+    for (let k = 0; k < guaranteedPattern.length; k++) {
+      const letter = guaranteedPattern[k] as Letter;
+      pushUsedLetter(letter);
+      board[i]![j] = letter;
 
-      row.push(letter);
-      usedLetters[letter] = usedLetters[letter] ? usedLetters[letter] + 1 : 1;
+      const nextMoves = [
+        [i + 1, j],
+        [i - 1, j],
+        [i, j + 1],
+        [i, j - 1]
+      ] as const satisfies [number, number][];
+      const validNextMoves = nextMoves.filter(([x, y]) => previousPositions.every(([px, py]) => px !== x || py !== y) && x >= 0 && x < 4 && y >= 0 && y < 4);
+      const nextPosition = getRandomItem(validNextMoves);
+
+      previousPositions.push(nextPosition);
+      i = nextPosition[0];
+      j = nextPosition[1];
     }
+  })();
 
-    arr.push(row);
-  }
+  (function spawnGuaranteedVowels() {
+    const vowels = ["a", "e", "i", "o", "u"] as Letter[];
+    const guaranteedVowels = getRandomInt(3, 5) - guaranteedPattern.split("").filter((char) => vowels.includes(char as Letter)).length;
 
-  if (!guaranteedPattern || guaranteedPattern.length > 4) return arr;
+    for (let i = 0; i < guaranteedVowels; i++) {
+      const emptyPositions = board
+        .map((row, rowIndex) => row.map((cell, cellIndex) => (cell === ("" as Letter) ? [rowIndex, cellIndex] : null)).filter((cell) => cell !== null))
+        .filter((row) => row.length)
+        .flat();
+      const [row, col] = getRandomItem(emptyPositions) as [number, number];
 
-  let i = getRandomInt(0, 3);
-  let j = getRandomInt(0, 3);
-  const previousPositions: [number, number][] = [[i, j]];
-  for (let k = 0; k < guaranteedPattern.length; k++) {
-    arr[i]![j] = guaranteedPattern[k] as Letter;
+      let vowel = getRandomItem(vowels);
+      while (!pushUsedLetter(vowel)) vowel = getRandomItem(vowels);
 
-    const nextMoves = [
-      [i + 1, j],
-      [i - 1, j],
-      [i, j + 1],
-      [i, j - 1]
-    ] as const satisfies [number, number][];
-    const validNextMoves = nextMoves.filter(([x, y]) => previousPositions.every(([px, py]) => px !== x || py !== y) && x >= 0 && x < 4 && y >= 0 && y < 4);
-    const nextPosition = getRandomItem(validNextMoves);
+      board[row]![col] = vowel;
+    }
+  })();
 
-    previousPositions.push(nextPosition);
-    i = nextPosition[0];
-    j = nextPosition[1];
-  }
+  (function spawnLetters() {
+    const remainingCells = board.reduce((acc, row) => acc + row.reduce((acc, cell) => acc + (cell === ("" as Letter) ? 1 : 0), 0), 0);
 
-  return arr;
+    for (let i = 0; i < remainingCells; i++) {
+      const emptyPositions = board
+        .map((row, rowIndex) => row.map((cell, cellIndex) => (cell === ("" as Letter) ? [rowIndex, cellIndex] : null)).filter((cell) => cell !== null))
+        .filter((row) => row.length)
+        .flat();
+      const [row, col] = getRandomItem(emptyPositions) as [number, number];
+
+      let letter = getLetter(weights);
+      while (!pushUsedLetter(letter)) letter = getLetter(weights);
+
+      board[row]![col] = letter;
+    }
+  })();
+
+  return board;
 }

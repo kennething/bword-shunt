@@ -3,7 +3,7 @@
     <GameScoreCounter :history="history" :score="score" />
 
     <div class="no-scrollbar flex w-full flex-col items-start justify-start gap-2 overflow-y-scroll rounded-lg bg-[#415139] p-3">
-      <div class="flex w-full items-center justify-between" v-for="entry in validHistory.toSorted((a, b) => b.word.length - a.word.length).toSorted()">
+      <div class="flex w-full items-center justify-between" v-for="entry in validHistory.toSorted().toSorted((a, b) => b.word.length - a.word.length)">
         <span class="normal-text rounded bg-linear-to-b from-[#f8e1ba] to-[#d6ad74] px-3 py-0.5 text-lg font-extrabold">{{ entry.word.toUpperCase() }}</span>
         <span class="text-lg font-extrabold text-white">{{ calculateScore(entry.word.length) }}</span>
       </div>

@@ -1,5 +1,19 @@
 <template>
   <div class="no-scrollbar flex h-dvh w-dvw flex-col items-center justify-start gap-2 overflow-y-scroll py-20">
+    <Drawer :is-open="viewingIndex !== -1" @close="viewingIndex = -1">
+      <div class="flex flex-col items-center justify-center" v-if="viewingPlayer">
+        <h3 class="text-xs">{{ viewingPlayer[0] === currentName ? "You" : viewingPlayer[0] }}</h3>
+        <p class="text-lg font-bold">{{ viewingPlayer[1] }} points | {{ histories[viewingPlayer[0]]!.length }} words</p>
+      </div>
+
+      <div class="no-scrollbar flex w-full flex-col items-start justify-start gap-2 overflow-y-scroll rounded-lg bg-[#415139]/75 p-3" v-if="viewingPlayer">
+        <div class="flex w-full items-center justify-between" v-for="entry in histories[viewingPlayer[0]]!.toSorted().toSorted((a, b) => b.length - a.length)">
+          <span class="normal-text rounded bg-linear-to-b from-[#f8e1ba] to-[#d6ad74] px-3 py-0.5 text-lg font-extrabold">{{ entry.toUpperCase() }}</span>
+          <span class="text-lg font-extrabold text-white">{{ calculateScore(entry.length) }}</span>
+        </div>
+      </div>
+    </Drawer>
+
     <Transition v-for="([player, score], index) in sortedScores" :key="player">
       <div
         v-if="index >= revealIndex"
@@ -14,11 +28,11 @@
       >
         <div class="flex flex-col items-start justify-center">
           <h4 class="text-xl font-bold">{{ score }}</h4>
-          <p class="w-50 overflow-hidden text-sm text-nowrap text-ellipsis">{{ player }}</p>
+          <p class="w-50 overflow-hidden text-sm text-nowrap text-ellipsis">{{ player === currentName ? "You" : player }}</p>
         </div>
-        <!-- <button class="flex grow items-center justify-center" :disabled="revealIndex !== 0">
+        <button class="flex grow items-center justify-center" :disabled="revealIndex !== 0" @click="viewingIndex = index">
           <img src="/eye.png" :alt="`View ${player}'s word history'`" class="size-10 select-none" draggable="false" />
-        </button> -->
+        </button>
       </div>
       <div
         v-else
@@ -33,7 +47,7 @@
       >
         <div class="flex flex-col items-start justify-center">
           <h4 class="text-xl font-bold">{{ score }}</h4>
-          <p class="w-50 overflow-hidden text-sm text-nowrap text-ellipsis">{{ player }}</p>
+          <p class="w-50 overflow-hidden text-sm text-nowrap text-ellipsis">{{ player === currentName ? "You" : player }}</p>
         </div>
         <button class="flex grow items-center justify-center">
           <img src="/eye.png" :alt="`View ${player}'s word history'`" class="size-10 select-none" draggable="false" />
@@ -62,6 +76,9 @@ const { currentName } = storeToRefs(multiplayerStore);
 
 const sortedScores = computed(() => Object.entries(props.scores).sort((a, b) => b[1] - a[1]));
 const revealIndex = ref(Math.min(3, sortedScores.value.length));
+
+const viewingIndex = ref(-1);
+const viewingPlayer = computed(() => (viewingIndex.value === -1 ? undefined : sortedScores.value[viewingIndex.value]));
 
 onMounted(async () => {
   const originalIndex = Math.min(3, sortedScores.value.length);
