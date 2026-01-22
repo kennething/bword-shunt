@@ -34,8 +34,8 @@ onMounted(async () => {
   }, 1000);
 });
 
-onMounted(async () => {
-  if (window.location.href.includes("https://wordhunt.kennethng.dev")) window.location.href = config.public.redirect;
+onBeforeMount(async () => {
+  if (window.location.href.includes("https://wordhunt.kennethng.dev") && config.public.redirect) window.location.href = config.public.redirect;
 });
 
 async function checkServerStatus() {
