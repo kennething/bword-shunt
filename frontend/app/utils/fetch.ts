@@ -43,6 +43,7 @@ async function requestEndpoint(endpoint: string, method?: string, body?: object)
 async function requestEndpoint<T>(endpoint: string, method?: string, body?: object): Promise<T>;
 async function requestEndpoint<T>(endpoint: string, method?: string, body?: object): Promise<T | void> {
   const config = useRuntimeConfig();
+  if (!config.public.backendUrl) throw new Error("whats a backend");
 
   const options: RequestInit = {};
   if (method) {
