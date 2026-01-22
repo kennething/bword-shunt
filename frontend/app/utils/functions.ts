@@ -113,6 +113,8 @@ export function generateBoard(guaranteedPattern: string, weights: Letter[]): Let
     }
   })();
 
+  console.log(board.map((row) => row.slice()));
+
   (function spawnLetters() {
     const remainingCells = board.reduce((acc, row) => acc + row.reduce((acc, cell) => acc + (cell === ("" as Letter) ? 1 : 0), 0), 0);
 

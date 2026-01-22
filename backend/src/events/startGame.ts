@@ -6,7 +6,7 @@ const wordEndings = ["", "s", "e", "es", "ed", "ng", "ngs", "ing", "ings", "es",
 
 export function startGame(io: ServerType, socket: SocketType): void {
   const selectedPattern = getRandomItem(wordEndings);
-  console.log(selectedPattern);
+  console.log(`🟩🟩🟩 ${new Date().toLocaleString()} -> ${selectedPattern}`);
   const board = generateBoard(selectedPattern, ["j", "q", "u", "v", "w", "x", "y", "z"]);
 
   const playerName = socket.data.playerName;

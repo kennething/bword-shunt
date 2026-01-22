@@ -8,7 +8,7 @@
           <Game class="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2" />
           <Teleport to="body">
             <Transition name="fade">
-              <div class="pointer-events-none fixed top-0 left-0 z-100 flex h-lvh w-lvw items-center justify-center bg-black/50 select-none" v-if="gameCountdown || selfTimerDone">
+              <div class="fixed top-0 left-0 z-100 flex h-lvh w-lvw items-center justify-center bg-black/50 select-none" v-if="gameCountdown || selfTimerDone">
                 <h1 class="text-center text-white" :class="selfTimerDone ? 'text-2xl font-semibold' : 'text-6xl font-extrabold'">
                   {{ selfTimerDone ? "Waiting for others to finish..." : gameCountdown }}
                 </h1>

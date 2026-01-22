@@ -22,7 +22,7 @@
           'border-blue border-4': player === currentName,
           'bg-neutral-200 py-2': index > 2,
           'bg-yellow-400 py-6': index === 0,
-          'bg-orange-400 py-4': index === 1,
+          'bg-orange-300 py-4': index === 1,
           'bg-amber-600 py-3': index === 2
         }"
       >
