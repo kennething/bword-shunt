@@ -5,11 +5,6 @@ Word Hunt but bad.
 
 No copyright infringement here!
 
-## Setup
+## Project Setup
 
-.env:
-
-```sh
-NUXT_PUBLIC_BACKEND_URL=http://<host>:6969
-NUXT_PUBLIC_REDIRECT=http://<host>:3000
-```
+go into `/backend` and `/frontend` and read their readmes :shipit:
