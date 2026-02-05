@@ -7,4 +7,4 @@ No copyright infringement here!
 
 ## Project Setup
 
-go into `/backend` and `/frontend` and read their readmes :shipit:
+go into [`/backend`](./backend) and [`/frontend`](./frontend) and read their respective READMEs :shipit:
